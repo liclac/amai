@@ -1,2 +1,3 @@
 worker:
   build: .
+  command: bash -c 'go build && amai'
