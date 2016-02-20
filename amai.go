@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"github.com/codegangsta/cli"
-	"github.com/PuerkitoBio/goquery"
+	// "github.com/PuerkitoBio/goquery"
 	"github.com/uppfinnarn/amai/adapters"
 	"github.com/uppfinnarn/amai/ffxiv"
 )
@@ -14,17 +14,7 @@ func GetCharacter(adapter adapters.Adapter, c *cli.Context) {
 	id := c.Args()[0]
 	url := fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id)
 	
-	res, err := adapter.Get(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer res.Body.Close()
-	
-	if res.StatusCode != 200 {
-		log.Fatal("Error: ", res.Status)
-	}
-	
-	doc, err := goquery.NewDocumentFromResponse(res)
+	doc, err := adapter.GetDocument(url)
 	if err != nil {
 		log.Fatal(err)
 	}
