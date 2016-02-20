@@ -6,12 +6,26 @@ import (
 	// "github.com/PuerkitoBio/goquery"
 )
 
-type FFXIVAdapter struct {
-	adapters.BaseAdapter
+type FFXIVCharacter struct {
+	id string
+	name string
+	server string
 }
 
-type FFXIVCharacter struct {
-	adapters.Character
+func (c FFXIVCharacter) ID() string {
+	return c.id
+}
+
+func (c FFXIVCharacter) Name() string {
+	return c.name
+}
+
+func (c FFXIVCharacter) String() string {
+	return fmt.Sprintf("%s (%s)", c.Name(), c.server)
+}
+
+type FFXIVAdapter struct {
+	adapters.BaseAdapter
 }
 
 func NewAdapter() *FFXIVAdapter {
@@ -23,12 +37,14 @@ func NewAdapter() *FFXIVAdapter {
 	}
 }
 
-func (a *FFXIVAdapter) GetCharacter(id string) (char adapters.Character, err error) {
+func (a *FFXIVAdapter) GetCharacter(id string) (adapters.Character, error) {
 	doc, err := a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id))
 	if err != nil {
-		return char, err
+		return nil, err
 	}
 	
-	char.Name = doc.Find(".txt_charaname").Text()
+	char := &FFXIVCharacter{}
+	char.name = doc.Find(".txt_charaname").Text()
+	char.server = "Server??"
 	return char, nil
 }

@@ -17,7 +17,7 @@ func GetCharacter(adapter adapters.Adapter, c *cli.Context) {
 		log.Fatal(err)
 	}
 	
-	fmt.Printf("Name: %s\n", char.Name)
+	fmt.Printf("%s\n", char)
 }
 
 func main() {
