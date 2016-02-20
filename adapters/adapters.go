@@ -17,6 +17,8 @@ func (e WrongCodeError) Error() string {
 type Adapter interface {
 	Get(url string) (*http.Response, error)
 	GetDocument(url string) (*goquery.Document, error)
+	
+	GetCharacter(id string) (*goquery.Document, error)
 }
 
 type BaseAdapter struct {
