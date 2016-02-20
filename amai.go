@@ -10,6 +10,29 @@ import (
 	"github.com/uppfinnarn/amai/ffxiv"
 )
 
+func GetCharacter(adapter adapters.Adapter, c *cli.Context) {
+	id := c.Args()[0]
+	url := fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id)
+	
+	res, err := adapter.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+	
+	if res.StatusCode != 200 {
+		log.Fatal("Error: ", res.Status)
+	}
+	
+	doc, err := goquery.NewDocumentFromResponse(res)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	name := doc.Find(".txt_charaname").Text()
+	fmt.Printf("Name: %s\n", name)
+}
+
 func main() {
 	var adapter adapters.Adapter = ffxiv.NewAdapter()
 	
@@ -22,28 +45,7 @@ func main() {
 			Name: "char",
 			Usage: "Shows information about a character",
 			Aliases: []string { "c" },
-			Action: func(c *cli.Context) {
-				id := c.Args()[0]
-				url := fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id)
-				
-				res, err := adapter.Get(url)
-				if err != nil {
-					log.Fatal(err)
-				}
-				defer res.Body.Close()
-				
-				if res.StatusCode != 200 {
-					log.Fatal("Error: ", res.Status)
-				}
-				
-				doc, err := goquery.NewDocumentFromResponse(res)
-				if err != nil {
-					log.Fatal(err)
-				}
-				
-				name := doc.Find(".txt_charaname").Text()
-				fmt.Printf("Name: %s\n", name)
-			},
+			Action: func(c *cli.Context) { GetCharacter(adapter, c) },
 		},
 	}
 	
