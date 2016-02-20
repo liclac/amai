@@ -1,3 +1,19 @@
-worker:
-  build: .
-  command: bash -c 'go build && amai'
+version: "2"
+services:
+  database:
+    image: neo4j
+    ports:
+      - 7474:7474
+    ulimits:
+      nofile:
+        soft: 40000
+        hard: 40000
+    volumes:
+      - database_data:/data
+  worker:
+    build: .
+    command: bash -c 'go build && amai'
+    links:
+      - database
+volumes:
+  database_data: {}
