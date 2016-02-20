@@ -14,7 +14,7 @@ func NewAdapter() *FFXIVAdapter {
 	}
 }
 
-func (a FFXIVAdapter) Get(url string) (*http.Response, error) {
+func (a *FFXIVAdapter) Get(url string) (*http.Response, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
