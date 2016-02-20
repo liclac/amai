@@ -3,11 +3,15 @@ package ffxiv
 import (
 	"fmt"
 	"github.com/uppfinnarn/amai/adapters"
-	"github.com/PuerkitoBio/goquery"
+	// "github.com/PuerkitoBio/goquery"
 )
 
 type FFXIVAdapter struct {
 	adapters.BaseAdapter
+}
+
+type FFXIVCharacter struct {
+	adapters.Character
 }
 
 func NewAdapter() *FFXIVAdapter {
@@ -19,6 +23,12 @@ func NewAdapter() *FFXIVAdapter {
 	}
 }
 
-func (a *FFXIVAdapter) GetCharacter(id string) (*goquery.Document, error) {
-	return a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id))
+func (a *FFXIVAdapter) GetCharacter(id string) (char adapters.Character, err error) {
+	doc, err := a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id))
+	if err != nil {
+		return char, err
+	}
+	
+	char.Name = doc.Find(".txt_charaname").Text()
+	return char, nil
 }

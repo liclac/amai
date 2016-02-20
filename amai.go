@@ -12,13 +12,12 @@ import (
 func GetCharacter(adapter adapters.Adapter, c *cli.Context) {
 	id := c.Args()[0]
 	
-	doc, err := adapter.GetCharacter(id)
+	char, err := adapter.GetCharacter(id)
 	if err != nil {
 		log.Fatal(err)
 	}
 	
-	name := doc.Find(".txt_charaname").Text()
-	fmt.Printf("Name: %s\n", name)
+	fmt.Printf("Name: %s\n", char.Name)
 }
 
 func main() {

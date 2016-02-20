@@ -14,11 +14,16 @@ func (e WrongCodeError) Error() string {
 	return e.Status
 }
 
+type Character struct {
+	ID string
+	Name string
+}
+
 type Adapter interface {
 	Get(url string) (*http.Response, error)
 	GetDocument(url string) (*goquery.Document, error)
 	
-	GetCharacter(id string) (*goquery.Document, error)
+	GetCharacter(id string) (Character, error)
 }
 
 type BaseAdapter struct {
