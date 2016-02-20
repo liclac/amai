@@ -20,12 +20,14 @@ type Adapter interface {
 }
 
 type BaseAdapter struct {
-	client *http.Client
+	Client *http.Client
+	Headers map[string]string
 }
 
-func NewAdapter() *BaseAdapter {
+func NewAdapter(headers map[string]string) *BaseAdapter {
 	return &BaseAdapter{
 		&http.Client{},
+		headers,
 	}
 }
 
@@ -34,10 +36,12 @@ func (a *BaseAdapter) Get(url string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Cookie", "ldst_touchstone=1;ldst_is_support_browser=1;ldst_visit=1")
-	req.Header.Add("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
 	
-	return a.client.Do(req)
+	for key, val := range a.Headers {
+		req.Header.Add(key, val)
+	}
+	
+	return a.Client.Do(req)
 }
 
 func (a *BaseAdapter) MakeDocument(res *http.Response) (doc *goquery.Document, err error) {
