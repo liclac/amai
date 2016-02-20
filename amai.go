@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 	"github.com/codegangsta/cli"
-	"github.com/uppfinnarn/amai/adapters"
+	"github.com/uppfinnarn/amai/base"
 	"github.com/uppfinnarn/amai/ffxiv"
 )
 
-func GetCharacter(adapter adapters.Adapter, c *cli.Context) {
+func GetCharacter(adapter base.Adapter, c *cli.Context) {
 	id := c.Args()[0]
 	
 	char, err := adapter.GetCharacter(id)
@@ -21,7 +21,7 @@ func GetCharacter(adapter adapters.Adapter, c *cli.Context) {
 }
 
 func main() {
-	var adapter adapters.Adapter = ffxiv.NewAdapter()
+	var adapter base.Adapter = ffxiv.NewAdapter()
 	
 	app := cli.NewApp()
 	app.Name = "amai"

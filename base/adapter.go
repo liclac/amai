@@ -1,7 +1,6 @@
-package adapters
+package base
 
 import (
-	"fmt"
 	"net/http"
 	"github.com/PuerkitoBio/goquery"
 )
@@ -13,12 +12,6 @@ type WrongCodeError struct {
 
 func (e WrongCodeError) Error() string {
 	return e.Status
-}
-
-type Character interface {
-	fmt.Stringer
-	ID() string
-	Name() string
 }
 
 type Adapter interface {
