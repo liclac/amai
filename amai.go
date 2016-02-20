@@ -3,14 +3,15 @@ package main
 import (
 	"os"
 	"fmt"
-	"net/http"
 	"log"
 	"github.com/codegangsta/cli"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/uppfinnarn/amai/adapters"
+	"github.com/uppfinnarn/amai/ffxiv"
 )
 
 func main() {
-	client := &http.Client{}
+	var adapter adapters.Adapter = ffxiv.NewAdapter()
 	
 	app := cli.NewApp()
 	app.Name = "amai"
@@ -25,14 +26,7 @@ func main() {
 				id := c.Args()[0]
 				url := fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id)
 				
-				req, err := http.NewRequest("GET", url, nil)
-				if err != nil {
-					log.Fatal(err)
-				}
-				req.Header.Add("Cookie", "ldst_touchstone=1;ldst_is_support_browser=1;ldst_visit=1")
-				req.Header.Add("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1")
-				
-				res, err := client.Do(req)
+				res, err := adapter.Get(url)
 				if err != nil {
 					log.Fatal(err)
 				}
