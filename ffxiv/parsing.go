@@ -74,6 +74,7 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 			box.Find(".txt_name").EachWithBreak(func(i int, e *goquery.Selection) bool {
 				switch i {
 				case 0:
+					// https://github.com/golang/go/issues/6842
 					sun, moon, err := parseEorzeanDate(e.Text())
 					if err != nil {
 						return false
