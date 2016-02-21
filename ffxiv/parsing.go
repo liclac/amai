@@ -53,7 +53,11 @@ func parseGuardianName(s string) string {
 func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err error) {
 	char = FFXIVCharacter{}
 	
-	char.ID = id
+	char.ID, err = strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return char, err
+	}
+	
 	char.Name = doc.Find(".player_name_txt h2 a").Text()
 	char.Title = doc.Find(".chara_title").Text()
 	char.ServerName = normalizeServerName(doc.Find(".player_name_txt h2 span").Text())
