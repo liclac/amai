@@ -13,7 +13,7 @@ type FFXIVCharacter struct {
 	BirthMonth   int    `json:"birth_month"`
 	Guardian     string `json:"guardian"`
 	FreeCompany  struct {
-		ID       uint64
-		Name     string
-	}
+		ID       uint64 `json:"id"`
+		Name     string `json:"name"`
+	}                   `json:"free_company"`
 }
