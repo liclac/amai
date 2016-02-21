@@ -30,3 +30,10 @@ func TestParseEorzeanDate(t *testing.T) {
 		t.Fatal("3/2A: ", sun, moon, err)
 	}
 }
+
+func TestParseEorzeanDateInvalid(t *testing.T) {
+	_, _, err := parseEorzeanDate("Mary had a little lamb")
+	if err == nil {
+		t.Fail()
+	}
+}

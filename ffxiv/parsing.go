@@ -20,9 +20,12 @@ func normalizeServerName(name string) string {
 }
 
 func parseEorzeanDate(s string) (sun int, moon int, err error) {
-	s = strings.ToLower(s)
 	eorzeanDateRegex := regexp.MustCompile(`(\d+)(?:st|nd|rd|th) sun of the (\d+)(?:st|nd|rd|th) (astral|umbral) moon`)
-	matches := eorzeanDateRegex.FindStringSubmatch(s)
+	matches := eorzeanDateRegex.FindStringSubmatch(strings.ToLower(s))
+	
+	if len(matches) != 4 {
+		return 0, 0, ConfusedByMarkupError(fmt.Sprintf("Can't parse Eorzean date: %s", s))
+	}
 	
 	sun, err = strconv.Atoi(matches[1])
 	if err != nil {
