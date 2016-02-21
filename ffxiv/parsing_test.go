@@ -4,12 +4,12 @@ import (
 	"testing"
 )
 
-func TestNormalizeServerID(t *testing.T) {
-	if normalizeServerID("(Ultros)") != "Ultros" {
+func TestNormalizeServerName(t *testing.T) {
+	if normalizeServerName("(Ultros)") != "Ultros" {
 		t.Fail();
 	}
 	
-	if normalizeServerID("Ultros") != "Ultros" {
+	if normalizeServerName("Ultros") != "Ultros" {
 		t.Fail();
 	}
 }

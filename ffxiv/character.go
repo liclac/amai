@@ -4,5 +4,5 @@ package ffxiv
 type FFXIVCharacter struct {
 	ID           string `json:"id"`
 	Name         string `json:"name"`
-	ServerID     string `json:"server_id"`
+	ServerName   string `json:"server_name"`
 }
