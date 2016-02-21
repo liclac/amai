@@ -6,7 +6,7 @@ type FFXIVCharacter struct {
 	Name         string `json:"name"`
 	Title        string `json:"title"`
 	ServerName   string `json:"server_name"`
-	RaceName     string `json:"race_name"`
-	ClanName     string `json:"clan_name"`
+	Race         string `json:"race"`
+	Clan         string `json:"clan"`
 	Gender       string `json:"gender"`
 }
