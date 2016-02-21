@@ -12,4 +12,8 @@ type FFXIVCharacter struct {
 	BirthDay     int    `json:"birth_day"`
 	BirthMonth   int    `json:"birth_month"`
 	Guardian     string `json:"guardian"`
+	FreeCompany  struct {
+		ID       uint64
+		Name     string
+	}
 }

@@ -50,6 +50,16 @@ func parseGuardianName(s string) string {
 	return parts[0]
 }
 
+func parseFreeCompanyIDFromURL(url string) (id uint64, err error) {
+	parts := strings.Split(strings.TrimSuffix(url, "/"), "/")
+	idString := parts[len(parts)-1]
+	id, err = strconv.ParseUint(idString, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	return id, err
+}
+
 func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err error) {
 	char = FFXIVCharacter{}
 	
@@ -89,6 +99,12 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 		case "City-state":
 		case "Grand Company":
 		case "Free Company":
+			link := box.Find(".txt_name a")
+			char.FreeCompany.ID, err = parseFreeCompanyIDFromURL(link.AttrOr("href", ""))
+			char.FreeCompany.Name = link.Text()
+			if err != nil {
+				return false
+			}
 		default:
 			err = ConfusedByMarkupError(fmt.Sprintf("Unknown infobox: %s", txt))
 			return false
