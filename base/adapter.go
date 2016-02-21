@@ -18,7 +18,7 @@ type Adapter interface {
 	Get(url string) (*http.Response, error)
 	GetDocument(url string) (*goquery.Document, error)
 	
-	GetCharacter(id string) (Character, error)
+	GetCharacter(id string) (interface{}, error)
 }
 
 type BaseAdapter struct {

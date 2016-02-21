@@ -4,6 +4,7 @@ import (
 	"os"
 	"fmt"
 	"log"
+	"encoding/json"
 	"github.com/codegangsta/cli"
 	"github.com/uppfinnarn/amai/base"
 	"github.com/uppfinnarn/amai/ffxiv"
@@ -17,7 +18,13 @@ func GetCharacter(adapter base.Adapter, c *cli.Context) {
 		log.Fatal(err)
 	}
 	
-	fmt.Printf("%s\n", char)
+	// fmt.Printf("%s\n", char)
+	s, err := json.MarshalIndent(char, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	fmt.Printf("%s\n", s)
 }
 
 func main() {

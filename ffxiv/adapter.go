@@ -19,14 +19,15 @@ func NewAdapter() *FFXIVAdapter {
 	}
 }
 
-func (a *FFXIVAdapter) GetCharacter(id string) (base.Character, error) {
+func (a *FFXIVAdapter) GetCharacter(id string) (interface{}, error) {
 	doc, err := a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id))
 	if err != nil {
 		return nil, err
 	}
 	
 	char := &FFXIVCharacter{}
-	char.name = doc.Find(".txt_charaname").Text()
-	char.server = "Server??"
+	char.ID = id
+	char.Name = doc.Find(".txt_charaname").Text()
+	char.Server = "Server??"
 	return char, nil
 }
