@@ -6,10 +6,10 @@ import (
 
 func TestNormalizeServerName(t *testing.T) {
 	if normalizeServerName("(Ultros)") != "Ultros" {
-		t.Fail();
+		t.Fail()
 	}
 	
 	if normalizeServerName("Ultros") != "Ultros" {
-		t.Fail();
+		t.Fail()
 	}
 }
