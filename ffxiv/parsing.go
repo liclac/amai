@@ -122,6 +122,9 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 			
 			char.GrandCompany.Name = parts[0]
 			char.GrandCompany.Rank, err = parseGrandCompanyRank(parts[1])
+			if err != nil {
+				return false
+			}
 		case "Free Company":
 			link := box.Find(".txt_name a")
 			char.FreeCompany.ID, err = parseFreeCompanyIDFromURL(link.AttrOr("href", ""))
