@@ -10,6 +10,7 @@ import (
 	"github.com/uppfinnarn/amai/ffxiv"
 )
 
+// Gets information about a character, prints a JSON blob to stdout.
 func GetCharacter(adapter base.Adapter, c *cli.Context) {
 	id := c.Args()[0]
 	
@@ -18,7 +19,6 @@ func GetCharacter(adapter base.Adapter, c *cli.Context) {
 		log.Fatal(err)
 	}
 	
-	// fmt.Printf("%s\n", char)
 	s, err := json.MarshalIndent(char, "", "  ")
 	if err != nil {
 		log.Fatal(err)

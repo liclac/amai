@@ -6,10 +6,12 @@ import (
 	// "github.com/PuerkitoBio/goquery"
 )
 
+// Adapter for FFXIV.
 type FFXIVAdapter struct {
 	base.BaseAdapter
 }
 
+// Creates a new FFXIV adapter.
 func NewAdapter() *FFXIVAdapter {
 	return &FFXIVAdapter{
 		*base.NewAdapter(map[string]string {
@@ -19,6 +21,7 @@ func NewAdapter() *FFXIVAdapter {
 	}
 }
 
+// Gets information about a character.
 func (a *FFXIVAdapter) GetCharacter(id string) (interface{}, error) {
 	doc, err := a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id))
 	if err != nil {
