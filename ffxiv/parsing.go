@@ -109,6 +109,10 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 				return true
 			})
 		case "City-state":
+			// City-state isn't particularly interesting, it affects nothing in-game. I suppose
+			// you could gauge how many people chose the GC in their starting city-state, but all
+			// that'd tell you is "yeah, 90% of the population did" - the game recommends picking
+			// the GC in your main's city-state, which at Lv20 is typically your first class.
 		case "Grand Company":
 			parts := strings.Split(box.Find(".txt_name").Text(), "/")
 			if len(parts) != 2 {
