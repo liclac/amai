@@ -27,19 +27,37 @@ func GetCharacter(adapter base.Adapter, c *cli.Context) {
 	fmt.Printf("%s\n", s)
 }
 
-func main() {
-	var adapter base.Adapter = ffxiv.NewAdapter()
+// Makes an adapter for the specified game
+func MakeAdapter(c *cli.Context) base.Adapter {
+	game := c.GlobalString("game")
 	
+	switch game {
+	case "ffxiv":
+		return ffxiv.NewAdapter()
+	default:
+		log.Fatal("Unknown game: ", game)
+	}
+	return nil
+}
+
+func main() {
 	app := cli.NewApp()
 	app.Name = "amai"
 	app.Usage = "Parse and process data from FFXIV"
 	app.Version = "0.0.1"
+	app.Flags = []cli.Flag {
+		cli.StringFlag {
+			Name: "game",
+			Usage: "Game to connect to",
+			Value: "ffxiv",
+		},
+	}
 	app.Commands = []cli.Command{
 		{
 			Name: "char",
 			Usage: "Shows information about a character",
 			Aliases: []string { "c" },
-			Action: func(c *cli.Context) { GetCharacter(adapter, c) },
+			Action: func(c *cli.Context) { GetCharacter(MakeAdapter(c), c) },
 		},
 	}
 	
