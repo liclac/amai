@@ -28,9 +28,5 @@ func (a *FFXIVAdapter) GetCharacter(id string) (interface{}, error) {
 		return nil, err
 	}
 	
-	char := &FFXIVCharacter{}
-	char.ID = id
-	char.Name = doc.Find(".txt_charaname").Text()
-	char.Server = "Server??"
-	return char, nil
+	return parseCharacter(id, doc)
 }
