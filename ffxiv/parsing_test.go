@@ -37,3 +37,13 @@ func TestParseEorzeanDateInvalid(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestParseGuardianName(t *testing.T) {
+	if parseGuardianName("Oschon, the Wanderer") != "Oschon" {
+		t.Fail()
+	}
+	
+	if parseGuardianName("Oschon") != "Oschon" {
+		t.Fail()
+	}
+}
