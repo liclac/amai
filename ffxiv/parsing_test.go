@@ -47,3 +47,34 @@ func TestParseGuardianName(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestParseGrandCompanyRank(t *testing.T) {
+	ranks := map[string]int {
+		"Storm Private Third Class": 1,
+		"Storm Private Second Class": 2,
+		"Storm Private First Class": 3,
+		"Storm Corporal": 4,
+		"Storm Sergeant Third Class": 5,
+		"Storm Sergeant Second Class": 6,
+		"Storm Sergeant First Class": 7,
+		"Chief Storm Sergeant": 8,
+		"Second Storm Lieutenant": 9,
+	}
+	
+	for r, n := range ranks {
+		i, err := parseGrandCompanyRank(r)
+		if i != n {
+			t.Fatal(r, n, i)
+		}
+		if err != nil {
+			t.Fatal(r, err)
+		}
+	}
+}
+
+func TestParseGrandCompanyRankInvalid(t *testing.T) {
+	_, err := parseGrandCompanyRank("Storm Shenanigans")
+	if err == nil {
+		t.Fail()
+	}
+}

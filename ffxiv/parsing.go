@@ -50,6 +50,21 @@ func parseGuardianName(s string) string {
 	return parts[0]
 }
 
+func parseGrandCompanyRank(s string) (int, error) {
+	switch {
+	case strings.HasSuffix(s, "Private Third Class"): return 1, nil
+	case strings.HasSuffix(s, "Private Second Class"): return 2, nil
+	case strings.HasSuffix(s, "Private First Class"): return 3, nil
+	case strings.HasSuffix(s, "Corporal"): return 4, nil
+	case strings.HasSuffix(s, "Sergeant Third Class"): return 5, nil
+	case strings.HasSuffix(s, "Sergeant Second Class"): return 6, nil
+	case strings.HasSuffix(s, "Sergeant First Class"): return 7, nil
+	case strings.HasPrefix(s, "Chief") && strings.HasSuffix(s, "Sergeant"): return 8, nil
+	case strings.HasPrefix(s, "Second") && strings.HasSuffix(s, "Lieutenant"): return 9, nil
+	default: return 0, ConfusedByMarkupError(fmt.Sprintf("Unknown rank name: %s", s))
+	}
+}
+
 func parseFreeCompanyIDFromURL(url string) (id uint64, err error) {
 	parts := strings.Split(strings.TrimSuffix(url, "/"), "/")
 	idString := parts[len(parts)-1]
@@ -95,6 +110,14 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 			})
 		case "City-state":
 		case "Grand Company":
+			parts := strings.Split(box.Find(".txt_name").Text(), "/")
+			if len(parts) != 2 {
+				err = ConfusedByMarkupError("Grand Company box isn't 'GC/Rank'")
+				return false
+			}
+			
+			char.GrandCompany.Name = parts[0]
+			char.GrandCompany.Rank, err = parseGrandCompanyRank(parts[1])
 		case "Free Company":
 			link := box.Find(".txt_name a")
 			char.FreeCompany.ID, err = parseFreeCompanyIDFromURL(link.AttrOr("href", ""))
