@@ -14,17 +14,22 @@ import (
 func GetCharacter(adapter base.Adapter, c *cli.Context) {
 	id := c.Args()[0]
 	
-	char, err := adapter.GetCharacter(id)
-	if err != nil {
-		log.Fatal(err)
-	}
+	data := make(chan interface{})
+	errors := make(chan error)
 	
-	s, err := json.MarshalIndent(char, "", "  ")
-	if err != nil {
-		log.Fatal(err)
-	}
+	go adapter.GetCharacter(id, data, errors)
 	
-	fmt.Printf("%s\n", s)
+	select {
+	case err := <- errors:
+		log.Fatal(err)
+	case char := <- data:
+		s, err := json.MarshalIndent(char, "", "  ")
+		if err != nil {
+			log.Fatal(err)
+		}
+		
+		fmt.Printf("%s\n", s)
+	}
 }
 
 // Makes an adapter for the specified game

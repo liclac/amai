@@ -21,7 +21,7 @@ type Adapter interface {
 	Get(url string) (*http.Response, error)
 	GetDocument(url string) (*goquery.Document, error)
 	
-	GetCharacter(id string) (interface{}, error)
+	GetCharacter(id string, results chan interface{}, errors chan error)
 }
 
 // A basic adapter.

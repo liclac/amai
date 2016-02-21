@@ -22,11 +22,18 @@ func NewAdapter() *FFXIVAdapter {
 }
 
 // Gets information about a character.
-func (a *FFXIVAdapter) GetCharacter(id string) (interface{}, error) {
+func (a *FFXIVAdapter) GetCharacter(id string, results chan interface{}, errors chan error) {
 	doc, err := a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/character/%s/", id))
 	if err != nil {
-		return nil, err
+		errors <- err
+		return
 	}
 	
-	return parseCharacter(id, doc)
+	char, err := parseCharacter(id, doc)
+	if err != nil {
+		errors <- err
+		return
+	}
+	
+	results <- char
 }
