@@ -2,7 +2,7 @@ package ffxiv
 
 // A FFXIV character.
 type FFXIVCharacter struct {
-	ID           int64  `json:"id"`
+	ID           uint64 `json:"id"`
 	Name         string `json:"name"`
 	Title        string `json:"title"`
 	ServerName   string `json:"server_name"`

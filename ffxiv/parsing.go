@@ -63,7 +63,7 @@ func parseFreeCompanyIDFromURL(url string) (id uint64, err error) {
 func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err error) {
 	char = FFXIVCharacter{}
 	
-	char.ID, err = strconv.ParseInt(id, 10, 64)
+	char.ID, err = strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		return char, err
 	}
@@ -84,13 +84,10 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 			box.Find(".txt_name").EachWithBreak(func(i int, e *goquery.Selection) bool {
 				switch i {
 				case 0:
-					// https://github.com/golang/go/issues/6842
-					sun, moon, err := parseEorzeanDate(e.Text())
+					char.BirthDay, char.BirthMonth, err = parseEorzeanDate(e.Text())
 					if err != nil {
 						return false
 					}
-					char.BirthDay = sun
-					char.BirthMonth = moon
 				case 1: char.Guardian = parseGuardianName(e.Text())
 				default: err = ConfusedByMarkupError("Too many items in NamedayGuardian box")
 				}
