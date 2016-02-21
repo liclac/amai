@@ -9,7 +9,7 @@ type FFXIVCharacter struct {
 	Race         string `json:"race"`
 	Clan         string `json:"clan"`
 	Gender       string `json:"gender"`
-	BirthMonth   int    `json:"birth_month"`
 	BirthDay     int    `json:"birth_day"`
+	BirthMonth   int    `json:"birth_month"`
 	Guardian     string `json:"guardian"`
 }

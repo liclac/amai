@@ -2,7 +2,9 @@ package ffxiv
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
+	"regexp"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -17,8 +19,27 @@ func normalizeServerName(name string) string {
 	return strings.TrimSuffix(strings.TrimPrefix(name, "("), ")")
 }
 
-func parseEorzeanDate(s string) (month int, day int) {
-	return 1, 2
+func parseEorzeanDate(s string) (sun int, moon int, err error) {
+	s = strings.ToLower(s)
+	eorzeanDateRegex := regexp.MustCompile(`(\d+)(?:st|nd|rd|th) sun of the (\d+)(?:st|nd|rd|th) (astral|umbral) moon`)
+	matches := eorzeanDateRegex.FindStringSubmatch(s)
+	
+	sun, err = strconv.Atoi(matches[1])
+	if err != nil {
+		return 0, 0, err
+	}
+	
+	moon, err = strconv.Atoi(matches[2])
+	if err != nil {
+		return 0, 0, err
+	}
+	
+	moon = moon + (moon - 1)
+	if matches[3] == "umbral" {
+		moon += 1
+	}
+	
+	return sun, moon, nil
 }
 
 func parseGuardianName(s string) string {
@@ -45,7 +66,13 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 		case "NamedayGuardian":
 			box.Find(".txt_name").EachWithBreak(func(i int, e *goquery.Selection) bool {
 				switch i {
-				case 0: char.BirthMonth, char.BirthDay = parseEorzeanDate(e.Text())
+				case 0:
+					sun, moon, err := parseEorzeanDate(e.Text())
+					if err != nil {
+						return false
+					}
+					char.BirthDay = sun
+					char.BirthMonth = moon
 				case 1: char.Guardian = parseGuardianName(e.Text())
 				default: err = ConfusedByMarkupError("Too many items in NamedayGuardian box")
 				}
