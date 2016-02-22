@@ -151,6 +151,29 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	if err != nil {
 		return char, err
 	}
+	doc.Find(".param_list li").EachWithBreak(func(i int, e *goquery.Selection) bool {
+		keys := map[string]string{
+			"Accuracy": "acc", "Critical Hit Rate": "crt", "Determination": "det",
+			"Defense": "def", "Parry": "par", "Magic Defense": "mdf",
+			"Attack Power": "atk", "Skill Speed": "sks", "Attack Magic Potency": "apt",
+			"Healing Magic Potency": "hpt", "Spell Speed": "sps",
+		}
+		elements := e.Find("span")
+		if elements.Length() != 2 {
+			err = ConfusedByMarkupError("Wrong number of elements in stat item")
+		}
+		keyElement := elements.First()
+		key, ok := keys[keyElement.Text()]
+		if ok {
+			valElement := elements.Last()
+			char.Stats[key], err = strconv.Atoi(valElement.Text())
+			return err == nil
+		}
+		return true
+	})
+	if err != nil {
+		return char, err
+	}
 	
 	return char, nil
 }
