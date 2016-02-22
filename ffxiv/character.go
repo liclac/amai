@@ -20,4 +20,5 @@ type FFXIVCharacter struct {
 		ID       uint64 `json:"id"`
 		Name     string `json:"name"`
 	}                   `json:"free_company"`
+	Stats        map[string]int `json:"stats"`
 }

@@ -142,5 +142,15 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 		return char, err
 	}
 	
+	char.Stats = make(map[string]int)
+	doc.Find(".param_list_attributes .right").EachWithBreak(func(i int, e *goquery.Selection) bool {
+		keys := []string{ "str", "dex", "vit", "int", "mnd", "pie" }
+		char.Stats[keys[i]], err = strconv.Atoi(e.Text())
+		return err == nil
+	})
+	if err != nil {
+		return char, err
+	}
+	
 	return char, nil
 }
