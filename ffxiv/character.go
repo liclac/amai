@@ -1,5 +1,11 @@
 package ffxiv
 
+type ClassInfo struct {
+	Level        int            `json:"level"`
+	ExpAt        int            `json:"exp_at"`
+	ExpOf        int            `json:"exp_of"`
+}
+
 // A FFXIV character.
 type FFXIVCharacter struct {
 	ID           uint64         `json:"id"`
@@ -21,4 +27,5 @@ type FFXIVCharacter struct {
 		Name     string         `json:"name"`
 	}                           `json:"free_company"`
 	Stats        map[string]int `json:"stats"`
+	Classes      map[string]ClassInfo `json:"classes"`
 }

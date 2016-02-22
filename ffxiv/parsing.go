@@ -177,5 +177,60 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 		return char, err
 	}
 	
+	char.Classes = make(map[string]ClassInfo)
+	currentClassKey := ""
+	currentClass := ClassInfo{}
+	doc.Find(".class_list td").EachWithBreak(func(i int, e *goquery.Selection) bool {
+		keys := map[string]string{
+			"Gladiator": "GLA", "Marauder": "MRD", "Archer": "ARC",
+			"Pugilist": "PGL", "Lancer": "LNC", "Rogue": "ROG",
+			"Conjurer": "CNJ", "Arcanist": "ACN", "Dark Knight": "DRK",
+			"Astrologian": "AST", "Machinist": "MCH",
+			"Carpenter": "CRP", "Armorer": "ARM", "Leatherworker": "LTW",
+			"Alchemist": "ALC", "Blacksmith": "BSM", "Goldsmith": "GSM",
+			"Weaver": "WVR", "Culinarian": "CUL", "Miner": "MIN",
+			"Fisher": "FSH", "Botanist": "BOT",
+		}
+		
+		txt := e.Text()
+		if txt == "" {
+			return true
+		}
+		
+		switch i % 3 {
+		case 0:
+			currentClassKey, _ = keys[txt]
+		case 1:
+			if txt == "-" {
+				currentClass.Level = 0
+			} else {
+				currentClass.Level, err = strconv.Atoi(txt)
+			}
+		case 2:
+			if txt == "- / -" {
+				currentClass.ExpAt = 0
+				currentClass.ExpOf = 0
+			} else {
+				parts := strings.Split(txt, " / ")
+				if len(parts) != 2 {
+					err = ConfusedByMarkupError(fmt.Sprintf("Invalid level format for %s", currentClassKey))
+					return false
+				}
+				currentClass.ExpAt, err = strconv.Atoi(parts[0])
+				currentClass.ExpOf, err = strconv.Atoi(parts[1])
+			}
+			
+			if err == nil && len(currentClassKey) > 0 {
+				char.Classes[currentClassKey] = currentClass
+				currentClassKey = ""
+				currentClass = ClassInfo{}
+			}
+		}
+		return err == nil
+	})
+	if err != nil {
+		return char, err
+	}
+	
 	return char, nil
 }
