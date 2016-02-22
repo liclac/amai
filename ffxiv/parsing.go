@@ -157,6 +157,8 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 			"Defense": "def", "Parry": "par", "Magic Defense": "mdf",
 			"Attack Power": "atk", "Skill Speed": "sks", "Attack Magic Potency": "apt",
 			"Healing Magic Potency": "hpt", "Spell Speed": "sps",
+			"Craftsmanship": "cra", "Control": "ctl",
+			"Gathering": "gat", "Perception": "pcp",
 		}
 		elements := e.Find("span")
 		if elements.Length() != 2 {
