@@ -234,3 +234,14 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	
 	return char, nil
 }
+
+func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, err error) {
+	fc = FFXIVFreeCompany{}
+	
+	fc.ID, err = strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		return fc, err
+	}
+	
+	return fc, nil
+}

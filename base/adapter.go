@@ -22,6 +22,7 @@ type Adapter interface {
 	GetDocument(url string) (*goquery.Document, error)
 	
 	GetCharacter(id string, results chan interface{}, errors chan error)
+	GetGuild(id string, results chan interface{}, errors chan error)
 }
 
 // A basic adapter.

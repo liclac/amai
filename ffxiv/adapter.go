@@ -36,3 +36,19 @@ func (a *FFXIVAdapter) GetCharacter(id string, results chan interface{}, errors 
 	
 	results <- char
 }
+
+func (a *FFXIVAdapter) GetGuild(id string, results chan interface{}, errors chan error) {
+	doc, err := a.GetDocument(fmt.Sprintf("http://na.finalfantasyxiv.com/lodestone/freecompany/%s/", id))
+	if err != nil {
+		errors <- err
+		return
+	}
+	
+	fc, err := parseFreeCompany(id, doc)
+	if err != nil {
+		errors <- err
+		return
+	}
+	
+	results <- fc
+}

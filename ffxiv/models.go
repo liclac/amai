@@ -29,3 +29,11 @@ type FFXIVCharacter struct {
 	Stats        map[string]int `json:"stats"`
 	Classes      map[string]ClassInfo `json:"classes"`
 }
+
+// A Free Company.
+type FFXIVFreeCompany struct {
+	ID           uint64         `json:"id"`
+	Name         string         `json:"name"`
+	Tag          string         `json:"tag"`
+	ServerName   string         `json:"server_name"`
+}

@@ -32,6 +32,28 @@ func GetCharacter(adapter base.Adapter, c *cli.Context) {
 	}
 }
 
+// Gets information about a guild, prints a JSON blob to stdout.
+func GetGuild(adapter base.Adapter, c *cli.Context) {
+	id := c.Args()[0]
+	
+	data := make(chan interface{})
+	errors := make(chan error)
+	
+	go adapter.GetGuild(id, data, errors)
+	
+	select {
+	case err := <- errors:
+		log.Fatal(err)
+	case char := <- data:
+		s, err := json.MarshalIndent(char, "", "  ")
+		if err != nil {
+			log.Fatal(err)
+		}
+		
+		fmt.Printf("%s\n", s)
+	}
+}
+
 // Makes an adapter for the specified game
 func MakeAdapter(c *cli.Context) base.Adapter {
 	game := c.GlobalString("game")
@@ -63,6 +85,14 @@ func main() {
 			Usage: "Shows information about a character",
 			Aliases: []string { "c" },
 			Action: func(c *cli.Context) { GetCharacter(MakeAdapter(c), c) },
+		},
+	}
+	app.Commands = []cli.Command{
+		{
+			Name: "guild",
+			Usage: "Shows information about a guild",
+			Aliases: []string { "g" },
+			Action: func(c *cli.Context) { GetGuild(MakeAdapter(c), c) },
 		},
 	}
 	
