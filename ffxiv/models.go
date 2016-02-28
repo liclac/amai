@@ -35,5 +35,6 @@ type FFXIVFreeCompany struct {
 	ID           uint64         `json:"id"`
 	Name         string         `json:"name"`
 	Tag          string         `json:"tag"`
-	ServerName   string         `json:"server_name"`
+	Server       string         `json:"server_name"`
+	GrandCompany string         `json:"grand_company"`
 }

@@ -4,46 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"regexp"
 	"github.com/PuerkitoBio/goquery"
 )
-
-type ConfusedByMarkupError string
-
-func (e ConfusedByMarkupError) Error() string {
-	return string(e)
-}
-
-func normalizeServerName(name string) string {
-	name = strings.TrimSpace(name)
-	return strings.TrimSuffix(strings.TrimPrefix(name, "("), ")")
-}
-
-func parseEorzeanDate(s string) (sun int, moon int, err error) {
-	eorzeanDateRegex := regexp.MustCompile(`(\d+)(?:st|nd|rd|th) sun of the (\d+)(?:st|nd|rd|th) (astral|umbral) moon`)
-	matches := eorzeanDateRegex.FindStringSubmatch(strings.ToLower(s))
-	
-	if len(matches) != 4 {
-		return 0, 0, ConfusedByMarkupError(fmt.Sprintf("Can't parse Eorzean date: %s", s))
-	}
-	
-	sun, err = strconv.Atoi(matches[1])
-	if err != nil {
-		return 0, 0, err
-	}
-	
-	moon, err = strconv.Atoi(matches[2])
-	if err != nil {
-		return 0, 0, err
-	}
-	
-	moon = moon + (moon - 1)
-	if matches[3] == "umbral" {
-		moon += 1
-	}
-	
-	return sun, moon, nil
-}
 
 func parseGuardianName(s string) string {
 	parts := strings.SplitN(s, ",", 2)
@@ -233,15 +195,4 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	}
 	
 	return char, nil
-}
-
-func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, err error) {
-	fc = FFXIVFreeCompany{}
-	
-	fc.ID, err = strconv.ParseUint(id, 10, 64)
-	if err != nil {
-		return fc, err
-	}
-	
-	return fc, nil
 }
