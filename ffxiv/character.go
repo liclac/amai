@@ -11,7 +11,7 @@ type FFXIVCharacter struct {
 	ID           uint64         `json:"id"`
 	Name         string         `json:"name"`
 	Title        string         `json:"title"`
-	ServerName   string         `json:"server_name"`
+	Server       string         `json:"server"`
 	Race         string         `json:"race"`
 	Clan         string         `json:"clan"`
 	Gender       string         `json:"gender"`

@@ -85,7 +85,7 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	
 	char.Name = doc.Find(".player_name_txt h2 a").Text()
 	char.Title = doc.Find(".chara_title").Text()
-	char.ServerName = normalizeServerName(doc.Find(".player_name_txt h2 span").Text())
+	char.Server = normalizeServerName(doc.Find(".player_name_txt h2 span").Text())
 	
 	infoParts := strings.Split(doc.Find(".chara_profile_title").Text(), "/")
 	char.Race = strings.TrimSpace(infoParts[0])
