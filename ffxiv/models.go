@@ -38,4 +38,5 @@ type FFXIVFreeCompany struct {
 	Description  string         `json:"description"`
 	Server       string         `json:"server_name"`
 	GrandCompany string         `json:"grand_company"`
+	Rank         int            `json:"rank"`
 }

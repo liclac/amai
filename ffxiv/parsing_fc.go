@@ -51,6 +51,7 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Active Members":
 			// Skipping this in favor of parsing the full member list.
 		case "Rank":
+			fc.Rank, err = strconv.Atoi(strings.TrimSpace(txt_e.Text()))
 		case "Ranking":
 			// Rather uninteresting, purely ephemeral information; could parse
 			// this if The Feast makes it interesting, I suppose? I honestly
