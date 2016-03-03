@@ -36,11 +36,11 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 	nameTagRE := regexp.MustCompile(`([^«]+)\s*«([^»]+)»`)
 	doc.Find(".area_inner_body tr").EachWithBreak(func(i int, e *goquery.Selection) bool {
 		key := e.Find("th").Text()
-		txt_e := e.Find("td")
+		valE := e.Find("td")
 		
 		switch key {
 		case "Free Company Name«Company Tag»":
-			nameTagMatches := nameTagRE.FindStringSubmatch(txt_e.Text())
+			nameTagMatches := nameTagRE.FindStringSubmatch(valE.Text())
 			if len(nameTagMatches) == 0 {
 				err = ConfusedByMarkupError("Can't parse FC name/tag")
 				return false
@@ -51,13 +51,13 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Active Members":
 			// Skipping this in favor of parsing the full member list.
 		case "Rank":
-			fc.Rank, err = strconv.Atoi(strings.TrimSpace(txt_e.Text()))
+			fc.Rank, err = strconv.Atoi(strings.TrimSpace(valE.Text()))
 		case "Ranking":
 			// Rather uninteresting, purely ephemeral information; could parse
 			// this if The Feast makes it interesting, I suppose? I honestly
 			// don't even understand what's graded here.
 		case "Company Slogan":
-			fc.Description, err = txt_e.Html()
+			fc.Description, err = valE.Html()
 			fc.Description = strings.Replace(fc.Description, "<br/>", "\n", -1)
 		case "Focus":
 		case "Seeking":
