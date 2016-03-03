@@ -49,6 +49,7 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 			fc.Tag = strings.TrimSpace(nameTagMatches[2])
 		case "Formed":
 		case "Active Members":
+			// Skipping this in favor of parsing the full member list.
 		case "Rank":
 		case "Ranking":
 			// Rather uninteresting, purely ephemeral information; could parse
