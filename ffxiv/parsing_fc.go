@@ -60,9 +60,8 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Estate Profile":
 		default:
 			err = ConfusedByMarkupError(fmt.Sprintf("Unknown item: %s", key))
-			return false
 		}
-		return true
+		return err == nil
 	})
 	if err != nil {
 		return fc, err
