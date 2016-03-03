@@ -36,11 +36,11 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 	nameTagRE := regexp.MustCompile(`([^«]+)\s*«([^»]+)»`)
 	doc.Find(".area_inner_body tr").EachWithBreak(func(i int, e *goquery.Selection) bool {
 		key := e.Find("th").Text()
-		txt := e.Find("td").Text()
+		txt_e := e.Find("td")
 		
 		switch key {
 		case "Free Company Name«Company Tag»":
-			nameTagMatches := nameTagRE.FindStringSubmatch(txt)
+			nameTagMatches := nameTagRE.FindStringSubmatch(txt_e.Text())
 			if len(nameTagMatches) == 0 {
 				err = ConfusedByMarkupError("Can't parse FC name/tag")
 				return false
@@ -52,7 +52,8 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Rank":
 		case "Ranking":
 		case "Company Slogan":
-			fc.Description = txt
+			fc.Description, err = txt_e.Html()
+			fc.Description = strings.Replace(fc.Description, "<br/>", "\n", -1)
 		case "Focus":
 		case "Seeking":
 		case "Active":
