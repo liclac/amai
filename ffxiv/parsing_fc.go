@@ -51,6 +51,9 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Active Members":
 		case "Rank":
 		case "Ranking":
+			// Rather uninteresting, purely ephemeral information; could parse
+			// this if The Feast makes it interesting, I suppose? I honestly
+			// don't even understand what's graded here.
 		case "Company Slogan":
 			fc.Description, err = txt_e.Html()
 			fc.Description = strings.Replace(fc.Description, "<br/>", "\n", -1)
