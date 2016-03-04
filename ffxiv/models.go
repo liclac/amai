@@ -52,6 +52,16 @@ type FCSeeking struct {
 	Gatherer    bool            `json:"gatherer"`
 }
 
+// Estate information for a Free Company
+type FCEstate struct {
+	Name        string          `json:"name"`
+	Plot        int             `json:"plot"`
+	Ward        int             `json:"ward"`
+	District    string          `json:"district"`
+	Size        int             `json:"size"`
+	Greeting    string          `json:"greeting"`
+}
+
 // A Free Company.
 type FFXIVFreeCompany struct {
 	ID           uint64         `json:"id"`
@@ -64,4 +74,5 @@ type FFXIVFreeCompany struct {
 	Focus        FCFocus        `json:"focus"`
 	Seeking      FCSeeking      `json:"seeking"`
 	Recruiting   bool           `json:"recruiting"`
+	Estate       FCEstate       `json:"estate"`
 }
