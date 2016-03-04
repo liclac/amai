@@ -106,6 +106,7 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 				return err == nil
 			})
 		case "Active":
+			// Not sure what the values here are... I'll have a look ingame later.
 		case "Recruitment":
 		case "Estate Profile":
 		default:
