@@ -30,6 +30,28 @@ type FFXIVCharacter struct {
 	Classes      map[string]ClassInfo `json:"classes"`
 }
 
+// "Focus" information for a Free Company.
+type FCFocus struct {
+	RolePlaying bool            `json:"role_playing"`
+	Leveling    bool            `json:"leveling"`
+	Casual      bool            `json:"casual"`
+	Hardcore    bool            `json:"hardcore"`
+	Dungeons    bool            `json:"dungeons"`
+	Guildhests  bool            `json:"guildhests"`
+	Trials      bool            `json:"trials"`
+	Raids       bool            `json:"raids"`
+	PvP         bool            `json:"pvp"`
+}
+
+// "Seeking" information for a Free Company.
+type FCSeeking struct {
+	Tank        bool            `json:"tank"`
+	Healer      bool            `json:"healer"`
+	DPS         bool            `json:"dps"`
+	Crafter     bool            `json:"crafter"`
+	Gatherer    bool            `json:"gatherer"`
+}
+
 // A Free Company.
 type FFXIVFreeCompany struct {
 	ID           uint64         `json:"id"`
@@ -39,23 +61,7 @@ type FFXIVFreeCompany struct {
 	Server       string         `json:"server_name"`
 	GrandCompany string         `json:"grand_company"`
 	Rank         int            `json:"rank"`
-	Focus        struct {
-		RolePlaying bool        `json:"role_playing"`
-		Leveling    bool        `json:"leveling"`
-		Casual      bool        `json:"casual"`
-		Hardcore    bool        `json:"hardcore"`
-		Dungeons    bool        `json:"dungeons"`
-		Guildhests  bool        `json:"guildhests"`
-		Trials      bool        `json:"trials"`
-		Raids       bool        `json:"raids"`
-		PvP         bool        `json:"pvp"`
-	}                           `json:"focus"`
-	Seeking      struct {
-		Tank        bool        `json:"tank"`
-		Healer      bool        `json:"healer"`
-		DPS         bool        `json:"dps"`
-		Crafter     bool        `json:"crafter"`
-		Gatherer    bool        `json:"gatherer"`
-	}
+	Focus        FCFocus        `json:"focus"`
+	Seeking      FCSeeking      `json:"seeking"`
 	Recruiting   bool           `json:"recruiting"`
 }

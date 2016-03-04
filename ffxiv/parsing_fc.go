@@ -62,8 +62,8 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Focus":
 			lis := e.Find("li")
 			if lis.Length() == 0 {
-				err = ConfusedByMarkupError("There are no focus li's!")
-				return false
+				fc.Focus = FCFocus{}
+				return true
 			}
 			
 			lis.EachWithBreak(func(j int, li *goquery.Selection) bool {
@@ -87,8 +87,8 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Seeking":
 			lis := e.Find("li")
 			if lis.Length() == 0 {
-				err = ConfusedByMarkupError("There are no seeking li's!")
-				return false
+				fc.Seeking = FCSeeking{}
+				return true
 			}
 			
 			lis.EachWithBreak(func(j int, li *goquery.Selection) bool {
