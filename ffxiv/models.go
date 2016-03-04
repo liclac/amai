@@ -39,4 +39,15 @@ type FFXIVFreeCompany struct {
 	Server       string         `json:"server_name"`
 	GrandCompany string         `json:"grand_company"`
 	Rank         int            `json:"rank"`
+	Focus        struct {
+		RolePlaying bool        `json:"role_playing"`
+		Leveling    bool        `json:"leveling"`
+		Casual      bool        `json:"casual"`
+		Hardcore    bool        `json:"hardcore"`
+		Dungeons    bool        `json:"dungeons"`
+		Guildhests  bool        `json:"guildhests"`
+		Trials      bool        `json:"trials"`
+		Raids       bool        `json:"raids"`
+		PvP         bool        `json:"pvp"`
+	}                           `json:"focus"`
 }

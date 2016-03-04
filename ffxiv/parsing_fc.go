@@ -60,6 +60,30 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 			fc.Description, err = valE.Html()
 			fc.Description = strings.Replace(fc.Description, "<br/>", "\n", -1)
 		case "Focus":
+			lis := e.Find("li")
+			if lis.Length() == 0 {
+				err = ConfusedByMarkupError("There are no focus li's!")
+				return false
+			}
+			
+			lis.EachWithBreak(func(j int, li *goquery.Selection) bool {
+				state := !li.HasClass("icon_off")
+				focus := li.Find("img").AttrOr("title", "")
+				switch focus {
+				case "Role-playing": fc.Focus.RolePlaying = state
+				case "Leveling": fc.Focus.Leveling = state
+				case "Casual": fc.Focus.Casual = state
+				case "Hardcore": fc.Focus.Hardcore = state
+				case "Dungeons": fc.Focus.Dungeons = state
+				case "Guildhests": fc.Focus.Guildhests = state
+				case "Trials": fc.Focus.Trials = state
+				case "Raids": fc.Focus.Raids = state
+				case "PvP": fc.Focus.PvP = state
+				default:
+					err = ConfusedByMarkupError(fmt.Sprintf("Unknown focus: %s", focus))
+				}
+				return err == nil
+			})
 		case "Seeking":
 		case "Active":
 		case "Recruitment":
