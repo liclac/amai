@@ -57,4 +57,5 @@ type FFXIVFreeCompany struct {
 		Crafter     bool        `json:"crafter"`
 		Gatherer    bool        `json:"gatherer"`
 	}
+	Recruiting   bool           `json:"recruiting"`
 }

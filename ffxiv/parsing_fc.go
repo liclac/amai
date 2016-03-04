@@ -108,6 +108,7 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 		case "Active":
 			// Not sure what the values here are... I'll have a look ingame later.
 		case "Recruitment":
+			fc.Recruiting = strings.TrimSpace(valE.Text()) == "Open"
 		case "Estate Profile":
 		default:
 			err = ConfusedByMarkupError(fmt.Sprintf("Unknown item: %s", key))
