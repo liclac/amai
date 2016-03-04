@@ -85,6 +85,26 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 				return err == nil
 			})
 		case "Seeking":
+			lis := e.Find("li")
+			if lis.Length() == 0 {
+				err = ConfusedByMarkupError("There are no seeking li's!")
+				return false
+			}
+			
+			lis.EachWithBreak(func(j int, li *goquery.Selection) bool {
+				state := !li.HasClass("icon_off")
+				focus := li.Find("img").AttrOr("title", "")
+				switch focus {
+				case "Tank": fc.Seeking.Tank = state
+				case "Healer": fc.Seeking.Healer = state
+				case "DPS": fc.Seeking.DPS = state
+				case "Crafter": fc.Seeking.Crafter = state
+				case "Gatherer": fc.Seeking.Gatherer = state
+				default:
+					err = ConfusedByMarkupError(fmt.Sprintf("Unknown seeking: %s", focus))
+				}
+				return err == nil
+			})
 		case "Active":
 		case "Recruitment":
 		case "Estate Profile":

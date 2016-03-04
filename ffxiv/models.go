@@ -50,4 +50,11 @@ type FFXIVFreeCompany struct {
 		Raids       bool        `json:"raids"`
 		PvP         bool        `json:"pvp"`
 	}                           `json:"focus"`
+	Seeking      struct {
+		Tank        bool        `json:"tank"`
+		Healer      bool        `json:"healer"`
+		DPS         bool        `json:"dps"`
+		Crafter     bool        `json:"crafter"`
+		Gatherer    bool        `json:"gatherer"`
+	}
 }
