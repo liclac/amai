@@ -19,6 +19,16 @@ func parseBanner(s string) (gc, server string, err error) {
 	return strings.TrimSpace(matches[1]), strings.TrimSpace(matches[2]), nil
 }
 
+func mapTitleSwitches(lis *goquery.Selection) (res map[string]bool) {
+	res = make(map[string]bool)
+	lis.Each(func(_ int, li *goquery.Selection) {
+		state := !li.HasClass("icon_off")
+		title := li.Find("img").AttrOr("title", "")
+		res[title] = state
+	})
+	return res
+}
+
 func parseEstateAddress(s string) (plot, ward int, district string, size int, err error) {
 	re := regexp.MustCompile(`\s*Plot (\d+), (\d+) Ward, ([^\(]+)\(([^\)]+)\)`)
 	matches := re.FindStringSubmatch(s)
@@ -82,51 +92,27 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 			fc.Description, err = valE.Html()
 			fc.Description = strings.Replace(fc.Description, "<br/>", "\n", -1)
 		case "Focus":
-			lis := e.Find("li")
-			if lis.Length() == 0 {
-				fc.Focus = FCFocus{}
-				return true
+			focus := mapTitleSwitches(e.Find("li"))
+			fc.Focus = FCFocus{
+				RolePlaying: focus["Role-playing"],
+				Leveling: focus["Leveling"],
+				Casual: focus["Casual"],
+				Hardcore: focus["Hardcore"],
+				Dungeons: focus["Dungeons"],
+				Guildhests: focus["Guildhests"],
+				Trials: focus["Trials"],
+				Raids: focus["Raids"],
+				PvP: focus["PvP"],
 			}
-			
-			lis.EachWithBreak(func(j int, li *goquery.Selection) bool {
-				state := !li.HasClass("icon_off")
-				focus := li.Find("img").AttrOr("title", "")
-				switch focus {
-				case "Role-playing": fc.Focus.RolePlaying = state
-				case "Leveling": fc.Focus.Leveling = state
-				case "Casual": fc.Focus.Casual = state
-				case "Hardcore": fc.Focus.Hardcore = state
-				case "Dungeons": fc.Focus.Dungeons = state
-				case "Guildhests": fc.Focus.Guildhests = state
-				case "Trials": fc.Focus.Trials = state
-				case "Raids": fc.Focus.Raids = state
-				case "PvP": fc.Focus.PvP = state
-				default:
-					err = ConfusedByMarkupError(fmt.Sprintf("Unknown focus: %s", focus))
-				}
-				return err == nil
-			})
 		case "Seeking":
-			lis := e.Find("li")
-			if lis.Length() == 0 {
-				fc.Seeking = FCSeeking{}
-				return true
+			seeking := mapTitleSwitches(e.Find("li"))
+			fc.Seeking = FCSeeking{
+				Tank: seeking["Tank"],
+				Healer: seeking["Healer"],
+				DPS: seeking["DPS"],
+				Crafter: seeking["Crafter"],
+				Gatherer: seeking["Gatherer"],
 			}
-			
-			lis.EachWithBreak(func(j int, li *goquery.Selection) bool {
-				state := !li.HasClass("icon_off")
-				focus := li.Find("img").AttrOr("title", "")
-				switch focus {
-				case "Tank": fc.Seeking.Tank = state
-				case "Healer": fc.Seeking.Healer = state
-				case "DPS": fc.Seeking.DPS = state
-				case "Crafter": fc.Seeking.Crafter = state
-				case "Gatherer": fc.Seeking.Gatherer = state
-				default:
-					err = ConfusedByMarkupError(fmt.Sprintf("Unknown seeking: %s", focus))
-				}
-				return err == nil
-			})
 		case "Active":
 			// Not sure what the values here are... I'll have a look ingame later.
 		case "Recruitment":
