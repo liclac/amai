@@ -28,6 +28,8 @@ type FFXIVCharacter struct {
 	}                           `json:"free_company"`
 	Stats        map[string]int `json:"stats"`
 	Classes      map[string]ClassInfo `json:"classes"`
+	Minions      []string       `json:"minions"`
+	Mounts       []string       `json:"mounts"`
 }
 
 // "Focus" information for a Free Company.

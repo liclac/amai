@@ -194,5 +194,21 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 		return char, err
 	}
 	
+	doc.Find(".minion_box").EachWithBreak(func(i int, box *goquery.Selection) bool {
+		items := box.Find("a")
+		data := items.Map(func(j int, e *goquery.Selection) string {
+			return e.AttrOr("title", "UNKNOWN")
+		})
+		switch i {
+		case 0: char.Mounts = data
+		case 1: char.Minions = data
+		default: err = ConfusedByMarkupError("Too many minion boxes!")
+		}
+		return err == nil
+	})
+	if err != nil {
+		return char, err
+	}
+	
 	return char, nil
 }
