@@ -86,8 +86,6 @@ func main() {
 			Aliases: []string { "c" },
 			Action: func(c *cli.Context) { GetCharacter(MakeAdapter(c), c) },
 		},
-	}
-	app.Commands = []cli.Command{
 		{
 			Name: "guild",
 			Usage: "Shows information about a guild",
