@@ -1,4 +1,4 @@
-package amai
+package main
 
 import (
 	"os"
