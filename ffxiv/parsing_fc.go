@@ -6,6 +6,7 @@ import (
 	"strings"
 	"regexp"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/uppfinnarn/amai/base"
 )
 
 func parseBanner(s string) (gc, server string, err error) {
@@ -90,7 +91,7 @@ func parseFreeCompany(id string, doc *goquery.Document) (fc FFXIVFreeCompany, er
 			// don't even understand what's graded here.
 		case "Company Slogan":
 			fc.Description, err = valE.Html()
-			fc.Description = strings.Replace(fc.Description, "<br/>", "\n", -1)
+			fc.Description = base.NormalizeHtml(fc.Description)
 		case "Focus":
 			focus := mapTitleSwitches(e.Find("li"))
 			fc.Focus = FCFocus{
