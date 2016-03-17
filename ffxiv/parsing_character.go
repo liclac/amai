@@ -2,9 +2,9 @@ package ffxiv
 
 import (
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"strconv"
 	"strings"
-	"github.com/PuerkitoBio/goquery"
 )
 
 func parseGuardianName(s string) string {
@@ -14,16 +14,26 @@ func parseGuardianName(s string) string {
 
 func parseGrandCompanyRank(s string) (int, error) {
 	switch {
-	case strings.HasSuffix(s, "Private Third Class"): return 1, nil
-	case strings.HasSuffix(s, "Private Second Class"): return 2, nil
-	case strings.HasSuffix(s, "Private First Class"): return 3, nil
-	case strings.HasSuffix(s, "Corporal"): return 4, nil
-	case strings.HasSuffix(s, "Sergeant Third Class"): return 5, nil
-	case strings.HasSuffix(s, "Sergeant Second Class"): return 6, nil
-	case strings.HasSuffix(s, "Sergeant First Class"): return 7, nil
-	case strings.HasPrefix(s, "Chief") && strings.HasSuffix(s, "Sergeant"): return 8, nil
-	case strings.HasPrefix(s, "Second") && strings.HasSuffix(s, "Lieutenant"): return 9, nil
-	default: return 0, ConfusedByMarkupError(fmt.Sprintf("Unknown rank name: %s", s))
+	case strings.HasSuffix(s, "Private Third Class"):
+		return 1, nil
+	case strings.HasSuffix(s, "Private Second Class"):
+		return 2, nil
+	case strings.HasSuffix(s, "Private First Class"):
+		return 3, nil
+	case strings.HasSuffix(s, "Corporal"):
+		return 4, nil
+	case strings.HasSuffix(s, "Sergeant Third Class"):
+		return 5, nil
+	case strings.HasSuffix(s, "Sergeant Second Class"):
+		return 6, nil
+	case strings.HasSuffix(s, "Sergeant First Class"):
+		return 7, nil
+	case strings.HasPrefix(s, "Chief") && strings.HasSuffix(s, "Sergeant"):
+		return 8, nil
+	case strings.HasPrefix(s, "Second") && strings.HasSuffix(s, "Lieutenant"):
+		return 9, nil
+	default:
+		return 0, ConfusedByMarkupError(fmt.Sprintf("Unknown rank name: %s", s))
 	}
 }
 
@@ -39,21 +49,21 @@ func parseFreeCompanyIDFromURL(url string) (id uint64, err error) {
 
 func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err error) {
 	char = FFXIVCharacter{}
-	
+
 	char.ID, err = strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		return char, err
 	}
-	
+
 	char.Name = doc.Find(".player_name_txt h2 a").Text()
 	char.Title = doc.Find(".chara_title").Text()
 	char.Server = normalizeServerName(doc.Find(".player_name_txt h2 span").Text())
-	
+
 	infoParts := strings.Split(doc.Find(".chara_profile_title").Text(), "/")
 	char.Race = strings.TrimSpace(infoParts[0])
 	char.Clan = strings.TrimSpace(infoParts[1])
 	char.Gender = strings.TrimSpace(infoParts[2])
-	
+
 	doc.Find(".chara_profile_box_info").EachWithBreak(func(i int, box *goquery.Selection) bool {
 		txt := box.Find(".txt").Text()
 		switch txt {
@@ -65,8 +75,10 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 					if err != nil {
 						return false
 					}
-				case 1: char.Guardian = parseGuardianName(e.Text())
-				default: err = ConfusedByMarkupError("Too many items in NamedayGuardian box")
+				case 1:
+					char.Guardian = parseGuardianName(e.Text())
+				default:
+					err = ConfusedByMarkupError("Too many items in NamedayGuardian box")
 				}
 				return true
 			})
@@ -81,7 +93,7 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 				err = ConfusedByMarkupError("Grand Company box isn't 'GC/Rank'")
 				return false
 			}
-			
+
 			char.GrandCompany.Name = parts[0]
 			char.GrandCompany.Rank, err = parseGrandCompanyRank(parts[1])
 			if err != nil {
@@ -103,10 +115,10 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	if err != nil {
 		return char, err
 	}
-	
+
 	char.Stats = make(map[string]int)
 	doc.Find(".param_list_attributes .right").EachWithBreak(func(i int, e *goquery.Selection) bool {
-		keys := []string{ "str", "dex", "vit", "int", "mnd", "pie" }
+		keys := []string{"str", "dex", "vit", "int", "mnd", "pie"}
 		char.Stats[keys[i]], err = strconv.Atoi(e.Text())
 		return err == nil
 	})
@@ -138,7 +150,7 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	if err != nil {
 		return char, err
 	}
-	
+
 	char.Classes = make(map[string]ClassInfo)
 	currentClassKey := ""
 	currentClass := ClassInfo{}
@@ -153,12 +165,12 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 			"Weaver": "WVR", "Culinarian": "CUL", "Miner": "MIN",
 			"Fisher": "FSH", "Botanist": "BOT",
 		}
-		
+
 		txt := e.Text()
 		if txt == "" {
 			return true
 		}
-		
+
 		switch i % 3 {
 		case 0:
 			currentClassKey, _ = keys[txt]
@@ -181,7 +193,7 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 				currentClass.ExpAt, err = strconv.Atoi(parts[0])
 				currentClass.ExpOf, err = strconv.Atoi(parts[1])
 			}
-			
+
 			if err == nil && len(currentClassKey) > 0 {
 				char.Classes[currentClassKey] = currentClass
 				currentClassKey = ""
@@ -193,22 +205,25 @@ func parseCharacter(id string, doc *goquery.Document) (char FFXIVCharacter, err 
 	if err != nil {
 		return char, err
 	}
-	
+
 	doc.Find(".minion_box").EachWithBreak(func(i int, box *goquery.Selection) bool {
 		items := box.Find("a")
 		data := items.Map(func(j int, e *goquery.Selection) string {
 			return e.AttrOr("title", "UNKNOWN")
 		})
 		switch i {
-		case 0: char.Mounts = data
-		case 1: char.Minions = data
-		default: err = ConfusedByMarkupError("Too many minion boxes!")
+		case 0:
+			char.Mounts = data
+		case 1:
+			char.Minions = data
+		default:
+			err = ConfusedByMarkupError("Too many minion boxes!")
 		}
 		return err == nil
 	})
 	if err != nil {
 		return char, err
 	}
-	
+
 	return char, nil
 }

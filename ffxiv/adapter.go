@@ -14,7 +14,7 @@ type FFXIVAdapter struct {
 // Creates a new FFXIV adapter.
 func NewAdapter() *FFXIVAdapter {
 	return &FFXIVAdapter{
-		*base.NewAdapter(map[string]string {
+		*base.NewAdapter(map[string]string{
 			"Cookie": "ldst_touchstone=1;ldst_is_support_browser=1;ldst_visit=1",
 		}),
 	}
@@ -27,13 +27,13 @@ func (a *FFXIVAdapter) GetCharacter(id string, results chan interface{}, errors 
 		errors <- err
 		return
 	}
-	
+
 	char, err := parseCharacter(id, doc)
 	if err != nil {
 		errors <- err
 		return
 	}
-	
+
 	results <- char
 }
 
@@ -44,12 +44,12 @@ func (a *FFXIVAdapter) GetGuild(id string, results chan interface{}, errors chan
 		errors <- err
 		return
 	}
-	
+
 	fc, err := parseFreeCompany(id, doc)
 	if err != nil {
 		errors <- err
 		return
 	}
-	
+
 	results <- fc
 }

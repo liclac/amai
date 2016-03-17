@@ -1,13 +1,13 @@
 package base
 
 import (
-	"net/http"
 	"github.com/PuerkitoBio/goquery"
+	"net/http"
 )
 
 // Error raised when an HTTP request returns the wrong status code.
 type WrongCodeError struct {
-	Status string
+	Status     string
 	StatusCode int
 }
 
@@ -20,14 +20,14 @@ func (e WrongCodeError) Error() string {
 type Adapter interface {
 	Get(url string) (*http.Response, error)
 	GetDocument(url string) (*goquery.Document, error)
-	
+
 	GetCharacter(id string, results chan interface{}, errors chan error)
 	GetGuild(id string, results chan interface{}, errors chan error)
 }
 
 // A basic adapter.
 type BaseAdapter struct {
-	Client *http.Client
+	Client  *http.Client
 	Headers map[string]string
 }
 
@@ -46,20 +46,20 @@ func (a *BaseAdapter) Get(url string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	for key, val := range a.Headers {
 		req.Header.Add(key, val)
 	}
-	
+
 	return a.Client.Do(req)
 }
 
 // Makes a goquery document out of a response.
 func (a *BaseAdapter) MakeDocument(res *http.Response) (doc *goquery.Document, err error) {
 	if res.StatusCode != 200 {
-		return nil, WrongCodeError { res.Status, res.StatusCode }
+		return nil, WrongCodeError{res.Status, res.StatusCode}
 	}
-	
+
 	return goquery.NewDocumentFromResponse(res)
 }
 
@@ -71,6 +71,6 @@ func (a *BaseAdapter) GetDocument(url string) (doc *goquery.Document, err error)
 		return nil, err
 	}
 	defer res.Body.Close()
-	
+
 	return a.MakeDocument(res)
 }
